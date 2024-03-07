@@ -1,15 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { PokemonModule } from './pokemon/pokemon.module';
 
 @Module({
-  imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../..', 'frontend', 'dist'),
-    }),
-  ],
+  imports: [PokemonModule],
   controllers: [AppController],
   providers: [AppService],
 })
