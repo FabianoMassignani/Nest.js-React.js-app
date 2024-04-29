@@ -10,33 +10,6 @@ exports.PokemonService = void 0;
 const common_1 = require("@nestjs/common");
 const pokemon_utils_1 = require("./pokemon.utils");
 let PokemonService = class PokemonService {
-    extractSpeciesName(evolutionChain, collector) {
-        const { species: { name }, evolves_to: evolvesTo, } = evolutionChain;
-        collector.push(name);
-        if ((0, pokemon_utils_1.isArrayWithNonZeroLength)(evolvesTo)) {
-            this.extractSpeciesName(evolvesTo[0], collector);
-        }
-    }
-    getEvolutionSequence(evolutionChain) {
-        const evolutionSequence = [];
-        this.extractSpeciesName(evolutionChain, evolutionSequence);
-        return evolutionSequence;
-    }
-    getNumberOfEvolutions(evolutionSequence, name) {
-        if (!(0, pokemon_utils_1.isArrayWithNonZeroLength)(evolutionSequence)) {
-            return 0;
-        }
-        const indexOfName = evolutionSequence.indexOf(name);
-        return evolutionSequence.length - 1 - indexOfName;
-    }
-    getPokemonGeneric(limit, offset) {
-        const pokemonUrl = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`;
-        return (0, pokemon_utils_1.fetchData)(pokemonUrl);
-    }
-    getPokemonSpecies(id) {
-        const pokemonSpeciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${id}`;
-        return (0, pokemon_utils_1.fetchData)(pokemonSpeciesUrl);
-    }
     async getPokemon(limit, offset, type, noOfEvolutions) {
         try {
             const { next, previous, results } = await this.getPokemonGeneric(limit, offset);
@@ -77,6 +50,33 @@ let PokemonService = class PokemonService {
                 error: error?.message || 'Internal server error',
             }, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    extractSpeciesName(evolutionChain, collector) {
+        const { species: { name }, evolves_to: evolvesTo, } = evolutionChain;
+        collector.push(name);
+        if ((0, pokemon_utils_1.isArrayWithNonZeroLength)(evolvesTo)) {
+            this.extractSpeciesName(evolvesTo[0], collector);
+        }
+    }
+    getEvolutionSequence(evolutionChain) {
+        const evolutionSequence = [];
+        this.extractSpeciesName(evolutionChain, evolutionSequence);
+        return evolutionSequence;
+    }
+    getNumberOfEvolutions(evolutionSequence, name) {
+        if (!(0, pokemon_utils_1.isArrayWithNonZeroLength)(evolutionSequence)) {
+            return 0;
+        }
+        const indexOfName = evolutionSequence.indexOf(name);
+        return evolutionSequence.length - 1 - indexOfName;
+    }
+    getPokemonGeneric(limit, offset) {
+        const pokemonUrl = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`;
+        return (0, pokemon_utils_1.fetchData)(pokemonUrl);
+    }
+    getPokemonSpecies(id) {
+        const pokemonSpeciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${id}`;
+        return (0, pokemon_utils_1.fetchData)(pokemonSpeciesUrl);
     }
 };
 exports.PokemonService = PokemonService;

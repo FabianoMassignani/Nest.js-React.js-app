@@ -14,6 +14,7 @@ export class PokemonController {
       transformOptions: { enableImplicitConversion: true },
     }),
   )
+  
   async getPokemon(@Query() pokemonQueryParams: PokemonQueryParams): Promise<IPokemonResponse> {
     const { limit, offset, type, noOfEvolutions } = pokemonQueryParams;
 
